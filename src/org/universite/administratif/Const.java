@@ -16,6 +16,7 @@ public interface Const {
     static final int HTTP_OK_STATUS = 200; //OK
     static final int HTTP_OK_CREATED = 201; //OK ressource créée
     static final int HTTP_KO_NOTALLOWED = 405; //Méthode non autorisée
+    static final int HTTP_KO_NOTFOUND = 404; //Méthode non autorisée
     
     
 }

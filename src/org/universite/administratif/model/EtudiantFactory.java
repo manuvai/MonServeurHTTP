@@ -22,11 +22,11 @@ public class EtudiantFactory {
         etud1.setId(123).setNom("Simon").setPrenom("Philippe");
         etudiants.put(etud1.getId(), etud1);
         Etudiant etud2 = new Etudiant();
-        etud2.setId(123).setNom("Artugras").setPrenom("Julien");
-        etudiants.put(etud1.getId(), etud2);        
+        etud2.setId(456).setNom("Artugras").setPrenom("Julien");
+        etudiants.put(etud2.getId(), etud2);
         Etudiant etud3 = new Etudiant();
-        etud3.setId(123).setNom("Nicolut").setPrenom("Gérard");
-        etudiants.put(etud1.getId(), etud3);        
+        etud3.setId(789).setNom("Nicolut").setPrenom("Gérard");
+        etudiants.put(etud3.getId(), etud3);
     }
 
     public static Map<Integer, Etudiant> getEtudiants() {

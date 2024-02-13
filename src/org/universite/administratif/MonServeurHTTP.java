@@ -31,6 +31,7 @@ public class MonServeurHTTP {
         try {
             server = HttpServer.create(new InetSocketAddress(9090), 10);
             server.createContext("/bonjour", new BonjourHandler());
+            server.createContext("/etudiants", new EtudiantsHandler());
 
             //un executor par défaut (serveur s'execute dans le thread courant)
             //server.setExecutor(null);

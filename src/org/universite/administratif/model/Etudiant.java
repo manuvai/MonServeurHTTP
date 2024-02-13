@@ -5,6 +5,7 @@
  */
 package org.universite.administratif.model;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
@@ -87,5 +88,12 @@ public class Etudiant {
         }
         return true;
     }
-    
+
+    public String getRepresentation() {
+        return String.join(";", Arrays.asList(
+                "id=" + getId(),
+                "nom=" + getNom(),
+                "prenom=" + getPrenom()
+        ));
+    }
 }
