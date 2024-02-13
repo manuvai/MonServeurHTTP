@@ -12,10 +12,7 @@ import org.universite.administratif.model.EtudiantFactory;
 
 import java.io.*;
 import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,8 +28,81 @@ public class EtudiantsHandler implements HttpHandler, Const {
         if ("GET".equals(method)) {
             handleGet(httpExchange);
         } else if ("POST".equals(method)) {
+            handlePost(httpExchange);
+        }
+    }
+
+    private void handlePost(HttpExchange httpExchange) throws IOException {
+
+        Map<String, String> bodyParameters = fetchBodyParameters(httpExchange);
+
+        String etudStr = fetchEtudiantString(bodyParameters);
+        Etudiant nouvelEtudiant;
+        try {
+            nouvelEtudiant = Etudiant.fromString(etudStr);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        EtudiantFactory.getEtudiants().put(nouvelEtudiant.getId(), nouvelEtudiant);
+
+        OutputStream os = httpExchange.getResponseBody();
+        OutputStreamWriter osw = new OutputStreamWriter(os);
+
+        String response = "";
+
+        httpExchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+        httpExchange.sendResponseHeaders(HTTP_OK_CREATED, response.getBytes(CHAR_SET).length);
+
+        osw.write(response);
+        osw.close();
+
+    }
+
+    private String fetchEtudiantString(Map<String, String> bodyParameters) {
+        String etudStr = "";
+
+        if (Objects.nonNull(bodyParameters)) {
+            String id = bodyParameters.get("id");
+            String nom = bodyParameters.get("nom");
+            String prenom = bodyParameters.get("prenom");
+
+            etudStr = String.join(";", Arrays.asList(
+                id,
+                nom,
+                prenom
+            ));
+        }
+
+        return etudStr;
+    }
+
+    private Map<String, String> fetchBodyParameters(HttpExchange httpExchange) throws IOException {
+        Map<String, String> map = new HashMap<>();
+
+        if (Objects.nonNull(httpExchange)) {
+            InputStream is = httpExchange.getRequestBody();
+            BufferedReader in = new BufferedReader(new InputStreamReader(is));
+
+            String line;
+            StringBuilder reqBody = new StringBuilder();
+            while ((line = in.readLine()) != null) {
+                reqBody.append(line);
+            }
+
+            List<String> params = List.of(reqBody.toString().split("&"));
+
+            params.forEach(param -> {
+                String[] parts = param.split("=");
+                String key = parts[0];
+                String value = parts[1];
+
+                map.put(key, value);
+            });
 
         }
+
+        return map;
     }
 
     public void handleGet(HttpExchange httpExchange) throws IOException {
